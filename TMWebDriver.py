@@ -32,7 +32,8 @@ class Session:
         self.connect_at = time.time()
         self.disconnect_at = None
     def mark_disconnected(self):
-        if self.is_active(): print(f"Tab disconnected: {self.url} (Session: {self.id})")
+        # Only print the disconnect message if the session was previously active
+        if self.disconnect_at is None: print(f"Tab disconnected: {self.url} (Session: {self.id})")
         self.disconnect_at = time.time()
 
 
@@ -63,7 +64,4 @@ class TMWebDriver:
                 print(f"Browser http connected: {session.url} (Session: {session_id})")  
                 self.sessions[session_id] = session
             session = self.sessions[session_id]
-            if session.disconnect_at is not None and session.type != 'http': session.reconnect(queue.Queue(), session_info)
-            session.disconnect_at = None
-            if session.type == 'http': msgQ = session.http_queue
-            else: return json.dumps({"id": "", "ret": "use
+            if session.disconnect_at is not None and session.type != 'http': session.reconnect(queue.Queue(), session_i
