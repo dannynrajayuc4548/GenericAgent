@@ -36,9 +36,10 @@ if not os.path.exists(cdp_cfg):
         open(cdp_cfg, 'w', encoding='utf-8').write(f"const TID = '__ljq_{hex(random.randint(0, 99999999))[2:8]}';")
     except Exception as e: print(f'[WARN] CDP config init failed: {e} — advanced web features (tmwebdriver) will be unavailable.')
 
+# Include day of week AND current time in system prompt so the agent can reason about time-sensitive tasks
 def get_system_prompt():
     with open(os.path.join(script_dir, f'assets/sys_prompt{lang_suffix}.txt'), 'r', encoding='utf-8') as f: prompt = f.read()
-    prompt += f"\nToday: {time.strftime('%Y-%m-%d %a')}\n"
+    prompt += f"\nToday: {time.strftime('%Y-%m-%d %a')}  Current time: {time.strftime('%H:%M')} (local)\n"
     prompt += get_global_memory()
     return prompt
 
@@ -51,5 +52,4 @@ class GeneraticAgent:
         for k, cfg in mykeys.items():
             if not any(x in k for x in ['api', 'config', 'cookie']): continue
             try:
-                if 'native' in k and 'claude' in k: llm_sessions += [NativeToolClient(NativeClaudeSession(cfg=cfg))]
-                elif 'native' in k and 'oai' in k: llm
+                if 'native' in k and 'claude' in k: llm_sessions += [NativeToolClient(NativeClaudeSess
